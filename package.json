@@ -1,4 +1,5 @@
 {
+  "homepage": "https://TeoZ08.github.io/FrontEnd-ApicomNode",
   "name": "vite-project",
   "private": true,
   "version": "0.0.0",
@@ -6,8 +7,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "axios": "^1.10.0",
