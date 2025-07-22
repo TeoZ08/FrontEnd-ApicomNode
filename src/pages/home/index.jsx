@@ -21,6 +21,10 @@ function Home() {
       email: inputEmail.current.value,
     });
     getUsers();
+
+    inputName.current.value = "";
+    inputAge.current.value = "";
+    inputEmail.current.value = "";
   }
 
   async function deleteUser(id) {
