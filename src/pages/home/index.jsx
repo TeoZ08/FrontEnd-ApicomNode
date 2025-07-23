@@ -8,6 +8,7 @@ function Home() {
   const inputName = useRef();
   const inputAge = useRef();
   const inputEmail = useRef();
+  const inputTelefone = useRef();
 
   async function getUsers() {
     const usersFromapi = await api.get("/usuarios");
@@ -19,12 +20,14 @@ function Home() {
       name: inputName.current.value,
       age: inputAge.current.value,
       email: inputEmail.current.value,
+      telefone: inputTelefone.current.value,
     });
     getUsers();
 
     inputName.current.value = "";
     inputAge.current.value = "";
     inputEmail.current.value = "";
+    inputTelefone.current.value = "";
   }
 
   async function deleteUser(id) {
@@ -43,6 +46,12 @@ function Home() {
         <input placeholder="Nome" name="nome" type="text" ref={inputName} />
         <input placeholder="Idade" name="idade" type="number" ref={inputAge} />
         <input placeholder="Email" name="email" type="email" ref={inputEmail} />
+        <input
+          placeholder="Telefone"
+          name="telefone"
+          type="tel"
+          ref={inputEmail}
+        />
         <button type="button" onClick={createUser}>
           Cadastrar
         </button>
@@ -59,6 +68,9 @@ function Home() {
             </p>
             <p>
               Email: <span>{user.email}</span>
+            </p>
+            <p>
+              Telefone: <span>{user.telefone}</span>
             </p>
           </div>
 
