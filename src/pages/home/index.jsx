@@ -50,7 +50,7 @@ function Home() {
           placeholder="Telefone"
           name="telefone"
           type="tel"
-          ref={inputEmail}
+          ref={inputTelefone}
         />
         <button type="button" onClick={createUser}>
           Cadastrar
