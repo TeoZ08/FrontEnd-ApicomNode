@@ -93,7 +93,10 @@ function Home() {
                   Nome: <span>{user.name}</span>
                 </p>
                 <p>
-                  Data de Nascimento: <span>{user.dataNascimento}</span>
+                  Data de Nasc.:{" "}
+                  <span>
+                    {new Date(user.dataNascimento).toLocaleDateString("pt-BR")}
+                  </span>
                 </p>
                 <p>
                   Email: <span>{user.email}</span>
