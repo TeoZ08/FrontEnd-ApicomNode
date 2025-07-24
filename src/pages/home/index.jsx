@@ -3,26 +3,49 @@ import "./style.css";
 import Trash from "../../assets/trash.svg";
 import api from "../../services/api";
 
+// Função auxiliar para criar uma pausa (delay)
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 function Home() {
+  // === ESTADOS ===
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busca, setBusca] = useState("");
+  const [error, setError] = useState(null); // Novo estado para controlar erros
 
+  // === REFS para os inputs do formulário ===
   const inputName = useRef();
   const inputDataNascimento = useRef();
   const inputEmail = useRef();
   const inputTelefone = useRef();
 
+  // === FUNÇÕES DE API ===
+
+  // Nova versão do getUsers com lógica de retentativa para o "cold start"
   const getUsers = useCallback(async () => {
     setLoading(true);
-    try {
-      const usersFromApi = await api.get("/usuarios");
-      setUsers(usersFromApi.data);
-    } catch (error) {
-      console.error("Erro ao buscar usuários:", error);
-      alert("Falha ao carregar os contatos. Verifique se a API está no ar.");
-    } finally {
-      setLoading(false);
+    setError(null); // Limpa erros antigos no início
+
+    for (let i = 0; i < 3; i++) {
+      // Tenta buscar os dados até 3 vezes
+      try {
+        const usersFromApi = await api.get("/usuarios");
+        setUsers(usersFromApi.data);
+        setLoading(false);
+        return; // Sucesso! Sai da função.
+      } catch (err) {
+        console.error(`Tentativa ${i + 1} de buscar usuários falhou:`, err);
+        if (i < 2) {
+          // Se não for a última tentativa...
+          await delay(3000); // ...espera 3 segundos antes de tentar de novo.
+        } else {
+          // Se for a última tentativa e ainda assim falhou...
+          setError(
+            "Não foi possível carregar os contatos. O servidor pode estar offline. Tente recarregar a página."
+          );
+          setLoading(false);
+        }
+      }
     }
   }, []);
 
@@ -36,8 +59,9 @@ function Home() {
       email: inputEmail.current.value,
       telefone: inputTelefone.current.value,
     });
-    getUsers();
+    getUsers(); // Recarrega a lista
 
+    // Limpa os campos
     inputName.current.value = "";
     inputDataNascimento.current.value = "";
     inputEmail.current.value = "";
@@ -46,17 +70,20 @@ function Home() {
 
   async function deleteUser(id) {
     await api.delete(`/usuarios/${id}`);
-    getUsers();
+    getUsers(); // Recarrega a lista
   }
 
+  // === EFEITO INICIAL ===
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
+  // === LÓGICA DE FILTRO ===
   const usersFiltrados = users.filter((user) =>
     user.name.toLowerCase().includes(busca.toLowerCase())
   );
 
+  // === RENDERIZAÇÃO DO COMPONENTE ===
   return (
     <div className="container">
       <form>
@@ -83,46 +110,53 @@ function Home() {
         />
       </div>
 
-      {loading ? (
-        <div className="loading-spinner"></div>
-      ) : (
-        <div className="lista-contatos">
-          {usersFiltrados.length > 0 ? (
-            usersFiltrados.map((user) => (
-              <div key={user.id} className="card">
-                <div className="card-info">
-                  <p>
-                    Nome: <span>{user.name}</span>
-                  </p>
-                  <p>
-                    Data De Nascimento:{" "}
-                    <span>
-                      {user.dataNascimento
-                        ? new Date(user.dataNascimento).toLocaleDateString(
-                            "pt-BR"
-                          )
-                        : "N/A"}
-                    </span>
-                  </p>
-                  <p>
-                    Email: <span>{user.email}</span>
-                  </p>
-                  <p>
-                    Telefone: <span>{user.telefone || "N/A"}</span>
-                  </p>
-                </div>
-                <div className="card-actions">
-                  <button type="button" onClick={() => deleteUser(user.id)}>
-                    <img src={Trash} alt="Deletar" />
-                  </button>
-                </div>
+      <div className="lista-contatos">
+        {/* Exibe o Spinner apenas se estiver carregando */}
+        {loading && <div className="loading-spinner"></div>}
+
+        {/* Exibe a mensagem de erro se houver um erro */}
+        {error && <p className="mensagem-erro">{error}</p>}
+
+        {/* Exibe os cards apenas se NÃO estiver carregando, NÃO houver erro e a lista tiver itens */}
+        {!loading &&
+          !error &&
+          usersFiltrados.length > 0 &&
+          usersFiltrados.map((user) => (
+            <div key={user.id} className="card">
+              <div className="card-info">
+                <p>
+                  Nome: <span>{user.name}</span>
+                </p>
+                <p>
+                  Nascimento:{" "}
+                  <span>
+                    {user.dataNascimento
+                      ? new Date(user.dataNascimento).toLocaleDateString(
+                          "pt-BR"
+                        )
+                      : "N/A"}
+                  </span>
+                </p>
+                <p>
+                  Email: <span>{user.email}</span>
+                </p>
+                <p>
+                  Telefone: <span>{user.telefone || "N/A"}</span>
+                </p>
               </div>
-            ))
-          ) : (
-            <p>Nenhum contato encontrado.</p>
-          )}
-        </div>
-      )}
+              <div className="card-actions">
+                <button type="button" onClick={() => deleteUser(user.id)}>
+                  <img src={Trash} alt="Deletar" />
+                </button>
+              </div>
+            </div>
+          ))}
+
+        {/* Exibe a mensagem de "nenhum contato" se NÃO estiver carregando, NÃO houver erro e a lista estiver vazia */}
+        {!loading && !error && usersFiltrados.length === 0 && (
+          <p>Nenhum contato encontrado.</p>
+        )}
+      </div>
     </div>
   );
 }

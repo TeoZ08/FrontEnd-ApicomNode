@@ -131,6 +131,15 @@ form button:hover {
   margin-inline: auto;
 }
 
+.mensagem-erro {
+  color: #d32f2f; /* Um tom de vermelho */
+  background-color: #ffcdd2; /* Um fundo rosa claro */
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  width: 100%;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
