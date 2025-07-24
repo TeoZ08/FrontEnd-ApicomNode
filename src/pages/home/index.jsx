@@ -42,7 +42,7 @@ function Home() {
   return (
     <div className="container">
       <form>
-        <h1>Cadastro De Usuario</h1>
+        <h1>Agenda de Contatos</h1>
         <input placeholder="Nome" name="nome" type="text" ref={inputName} />
         <input placeholder="Idade" name="idade" type="number" ref={inputAge} />
         <input placeholder="Email" name="email" type="email" ref={inputEmail} />
@@ -56,29 +56,30 @@ function Home() {
           Cadastrar
         </button>
       </form>
+      <div className="lista-contatos">
+        {users.map((user) => (
+          <div key={user.id} className="card">
+            <div>
+              <p>
+                Nome: <span>{user.name}</span>
+              </p>
+              <p>
+                Idade: <span>{user.age}</span>
+              </p>
+              <p>
+                Email: <span>{user.email}</span>
+              </p>
+              <p>
+                Telefone: <span>{user.telefone}</span>
+              </p>
+            </div>
 
-      {users.map((user) => (
-        <div key={user.id} className="card">
-          <div>
-            <p>
-              Nome: <span>{user.name}</span>
-            </p>
-            <p>
-              Idade: <span>{user.age}</span>
-            </p>
-            <p>
-              Email: <span>{user.email}</span>
-            </p>
-            <p>
-              Telefone: <span>{user.telefone}</span>
-            </p>
+            <button type="button" onClick={() => deleteUser(user.id)}>
+              <img src={Trash} alt="Lixo" />
+            </button>
           </div>
-
-          <button type="button" onClick={() => deleteUser(user.id)}>
-            <img src={Trash} alt="Lixo" />
-          </button>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
