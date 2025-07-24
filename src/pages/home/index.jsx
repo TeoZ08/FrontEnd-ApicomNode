@@ -9,7 +9,7 @@ function Home() {
   const [busca, setBusca] = useState("");
 
   const inputName = useRef();
-  const inputAge = useRef();
+  const inputDataNascimento = useRef();
   const inputEmail = useRef();
   const inputTelefone = useRef();
 
@@ -32,14 +32,14 @@ function Home() {
     }
     await api.post("/usuarios", {
       name: inputName.current.value,
-      age: inputName.current.value,
+      dataNascimento: inputDataNascimento.current.value,
       email: inputEmail.current.value,
       telefone: inputTelefone.current.value,
     });
     getUsers();
 
     inputName.current.value = "";
-    inputAge.current.value = "";
+    inputDataNascimento.current.value = "";
     inputEmail.current.value = "";
     inputTelefone.current.value = "";
   }
@@ -62,7 +62,7 @@ function Home() {
       <form>
         <h1>Agenda de Contatos</h1>
         <input placeholder="Nome" name="nome" type="text" ref={inputName} />
-        <input placeholder="Idade" name="idade" type="text" ref={inputAge} />
+        <input name="dataNascimento" type="date" ref={inputDataNascimento} />
         <input placeholder="Email" name="email" type="email" ref={inputEmail} />
         <input
           placeholder="Telefone"
@@ -93,7 +93,7 @@ function Home() {
                   Nome: <span>{user.name}</span>
                 </p>
                 <p>
-                  Idade: <span>{user.age}</span>
+                  Data de Nascimento: <span>{user.dataNascimento}</span>
                 </p>
                 <p>
                   Email: <span>{user.email}</span>
