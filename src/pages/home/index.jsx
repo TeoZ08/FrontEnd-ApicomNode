@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import "./style.css";
 import Trash from "../../assets/trash.svg";
 import api from "../../services/api";
@@ -13,7 +13,7 @@ function Home() {
   const inputEmail = useRef();
   const inputTelefone = useRef();
 
-  async function getUsers() {
+  const getUsers = useCallback(async () => {
     setLoading(true);
     try {
       const usersFromApi = await api.get("/usuarios");
@@ -24,7 +24,7 @@ function Home() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   async function createUser() {
     if (!inputName.current.value || !inputEmail.current.value) {
@@ -51,7 +51,7 @@ function Home() {
 
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [getUsers]);
 
   const usersFiltrados = users.filter((user) =>
     user.name.toLowerCase().includes(busca.toLowerCase())
@@ -79,6 +79,7 @@ function Home() {
         <input
           onChange={(e) => setBusca(e.target.value)}
           placeholder="Buscar contatos pelo nome..."
+          value={busca}
         />
       </div>
 
@@ -86,32 +87,40 @@ function Home() {
         <div className="loading-spinner"></div>
       ) : (
         <div className="lista-contatos">
-          {usersFiltrados.map((user) => (
-            <div key={user.id} className="card">
-              <div className="card-info">
-                <p>
-                  Nome: <span>{user.name}</span>
-                </p>
-                <p>
-                  Data de Nasc.:{" "}
-                  <span>
-                    {new Date(user.dataNascimento).toLocaleDateString("pt-BR")}
-                  </span>
-                </p>
-                <p>
-                  Email: <span>{user.email}</span>
-                </p>
-                <p>
-                  Telefone: <span>{user.telefone}</span>
-                </p>
+          {usersFiltrados.length > 0 ? (
+            usersFiltrados.map((user) => (
+              <div key={user.id} className="card">
+                <div className="card-info">
+                  <p>
+                    Nome: <span>{user.name}</span>
+                  </p>
+                  <p>
+                    Data De Nascimento:{" "}
+                    <span>
+                      {user.dataNascimento
+                        ? new Date(user.dataNascimento).toLocaleDateString(
+                            "pt-BR"
+                          )
+                        : "N/A"}
+                    </span>
+                  </p>
+                  <p>
+                    Email: <span>{user.email}</span>
+                  </p>
+                  <p>
+                    Telefone: <span>{user.telefone || "N/A"}</span>
+                  </p>
+                </div>
+                <div className="card-actions">
+                  <button type="button" onClick={() => deleteUser(user.id)}>
+                    <img src={Trash} alt="Deletar" />
+                  </button>
+                </div>
               </div>
-              <div className="card-actions">
-                <button type-="button" onClick={() => deleteUser(user.id)}>
-                  <img src={Trash} alt="Deletar" />
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Nenhum contato encontrado.</p>
+          )}
         </div>
       )}
     </div>
