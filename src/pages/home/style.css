@@ -1,3 +1,4 @@
+/* === ESTRUTURA PRINCIPAL === */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -9,46 +10,50 @@
 }
 
 h1 {
-  color: #1b1b1b;
+  color: var(--cor-texto-em-fundo-claro);
   font-size: 2.5rem;
   margin-bottom: 2rem;
   text-align: center;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* === FORMULÁRIO E BUSCA === */
+form,
+.busca-container {
   width: 100%;
   max-width: 500px;
   padding: 2rem;
   border-radius: 8px;
-  background-color: #f0f0f0;
+  background-color: var(--cor-fundo-elementos-claro);
   margin-bottom: 40px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-form input {
+.busca-container {
+  padding: 0;
+  box-shadow: none;
+  background-color: transparent;
+  margin-bottom: 2rem;
+}
+
+form input,
+.busca-container input {
   border-radius: 8px;
-  background-color: #fff;
+  background-color: #f0f0f0; /* Um cinza bem clarinho para os inputs */
   height: 45px;
-  color: #1b1b1b;
+  color: var(--cor-texto-em-fundo-claro);
   padding-left: 15px;
   outline: none;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
 }
 
-form input::placeholder {
+form input::placeholder,
+.busca-container input::placeholder {
   color: #888;
 }
 
-form input[type="date"] {
-  color-scheme: dark;
-}
-
 form button {
-  background-color: var(--button-color);
+  background-color: var(--cor-botao-principal);
   border: none;
   height: 45px;
   border-radius: 8px;
@@ -61,27 +66,10 @@ form button {
 }
 
 form button:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
-.busca-container {
-  width: 100%;
-  max-width: 500px;
-  margin-bottom: 2rem;
-}
-
-.busca-container input {
-  width: 100%;
-  height: 45px;
-  border-radius: 8px;
-  padding-left: 15px;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  color: #1b1b1b;
-  outline: none;
-}
-
+/* === LISTA DE CONTATOS (GRADE) === */
 .lista-contatos {
   width: 100%;
   display: grid;
@@ -95,20 +83,20 @@ form button:hover {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.5rem;
-  background-color: var(--surface-color);
+  background-color: var(--cor-fundo-elementos-escuro);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .card-info p {
-  color: var(--text-color);
+  color: var(--cor-texto-em-fundo-escuro);
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 .card-info p span {
   font-weight: normal;
-  color: #c0c0c0;
+  color: var(--cor-texto-secundario);
 }
 
 .card-actions {
@@ -135,7 +123,7 @@ form button:hover {
 
 .loading-spinner {
   border: 8px solid rgba(0, 0, 0, 0.1);
-  border-top: 8px solid var(--button-color);
+  border-top: 8px solid var(--cor-botao-principal);
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -155,19 +143,18 @@ form button:hover {
 /* === LAYOUT RESPONSIVO === */
 @media (max-width: 900px) {
   .lista-contatos {
-    grid-template-columns: repeat(2, 1fr); /* 2 colunas para tablets */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 600px) {
   .lista-contatos {
-    grid-template-columns: 1fr; /* 1 coluna para celulares */
+    grid-template-columns: 1fr;
   }
   h1 {
     font-size: 2rem;
   }
-  form,
-  .busca-container {
+  form {
     padding: 1.5rem;
   }
 }

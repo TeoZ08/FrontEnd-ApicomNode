@@ -1,11 +1,17 @@
+/* === PAINEL DE CONTROLE DE CORES === */
 :root {
-  --background-color: #a8a9ad;
-  --surface-color: #1b1b1b;
-  --accent-color: #0a122a;
-  --text-color: #e6e8e6;
-  --button-color: #8b8ae1;
+  --cor-fundo-pagina: #e0e0e0; /* Um cinza claro e suave para o fundo */
+  --cor-fundo-elementos-escuro: #2d2d2d; /* Para os cards */
+  --cor-fundo-elementos-claro: #ffffff; /* Para o formulário */
+
+  --cor-texto-em-fundo-escuro: #f5f5f5; /* Texto para ler nos cards */
+  --cor-texto-em-fundo-claro: #1b1b1b; /* Texto para ler no formulário e no h1 */
+  --cor-texto-secundario: #a0a0a0; /* Para detalhes, como o valor do campo */
+
+  --cor-botao-principal: #6c63ff; /* Um roxo mais vibrante */
 }
 
+/* === RESET E ESTILOS GLOBAIS === */
 * {
   margin: 0;
   padding: 0;
@@ -14,7 +20,7 @@
 }
 
 body {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--cor-fundo-pagina);
+  color: var(--cor-texto-em-fundo-claro); /* Cor de texto padrão */
   min-height: 100vh;
 }
